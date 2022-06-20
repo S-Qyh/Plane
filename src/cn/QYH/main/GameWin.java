@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.Objects;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,7 +19,7 @@ public class GameWin extends JFrame {
     @Override
     public void paint(Graphics g) {
         if (state == 0){
-            g.drawImage(new ImageIcon(GameWin.class.getResource("..//imgs//bg.jpg")).getImage(),
+            g.drawImage(new ImageIcon(Objects.requireNonNull(GameWin.class.getResource("..//imgs//bg.jpg"))).getImage(),
                     0,0,w,h,null);
             g.setColor(Color.yellow);
             g.setFont(new Font("微软雅黑", Font.BOLD, 20));
