@@ -1,7 +1,7 @@
 package cn.QYH.jf;
 
 import cn.QYH.main.GameWin;
-import cn.QYH.main.Test1Demo;
+import cn.QYH.util.Test1Demo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,17 +83,16 @@ public class Login extends JFrame {
                         "FROM\n" +
                         "\tuserInfo\n" +
                         "WHERE\n" +
-                        "\tuserInfo.`name` = "+ "'" +usernameText+ "'" + "AND\n" +
-                        "\tuserInfo.pwd = "+"'" +userpassword+ "'";
+                        "\tuserInfo.`name` = " + "'" + usernameText + "'" + "AND\n" +
+                        "\tuserInfo.pwd = " + "'" + userpassword + "'";
                 ResultSet resultSet = dataBase.query(sql);
-                if (resultSet == null){
-                    JOptionPane.showMessageDialog(null,"登录失败");
-                }else {
-                    JOptionPane.showMessageDialog(null,"登录成功！");
-                    GameWin gameWin = new GameWin();
-                    gameWin.lunch();
+                if (resultSet == null) {
+                    JOptionPane.showMessageDialog(null, "登录失败");
+                } else {
+                    JOptionPane.showMessageDialog(null, "登录成功！");
+                    new Thread(new GameWin()).start();
+                    that.setVisible(false);
                 }
-
             }
         });
 

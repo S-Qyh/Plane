@@ -17,10 +17,8 @@ public class PlaneObj extends GameObj{
             @Override
             public void mouseMoved(MouseEvent e) {
                 // 让飞机的横纵坐标 = 鼠标光标的横坐标
-                x = (e.getX() - w/2) + 20;
-
-                y = (e.getY() - h/2) + 10;
-                System.out.println(x +" "+ y);
+                x = (e.getX() - w/2) ;
+                y = (e.getY() - h/2) ;
             }
         });
     }
@@ -33,6 +31,16 @@ public class PlaneObj extends GameObj{
     @Override
     public Image getImage() {
         return super.getImage();
+    }
+
+    @Override
+    public int getX() {
+        return super.getX();
+    }
+
+    @Override
+    public int getY() {
+        return super.getY();
     }
 
     public PlaneObj(){
