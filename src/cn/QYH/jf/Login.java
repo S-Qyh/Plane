@@ -1,13 +1,18 @@
 package cn.QYH.jf;
 
+import cn.QYH.main.Test1Demo;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Login extends JFrame {
     static Login that;
+
     public Login() {
         that = this;
         //给登录窗口加入面板
@@ -75,24 +80,24 @@ public class Login extends JFrame {
 //                System.out.println("用户名："+usernameText+"  密码："+userpassword);
 
                 // 这里读取数据库里的数据 和 用户输入做比对
-                if (usernameText.equals("user") && userpassword.equals("123")) {
-                    JOptionPane.showMessageDialog(null, "账户密码正确！");
-                    that.setVisible(false);
-                } else {
-                    if (!usernameText.equals("user")) {
-                        NameFlag = 1;
-                    }
-                    if (!userpassword.equals("123")) {
-                        PwdFlag = 1;
-                    }
-                    if (NameFlag == 1 && PwdFlag == 1) {
-                        JOptionPane.showMessageDialog(null, "用户名和密码错误！");
-                    } else if (NameFlag == 1) {
-                        JOptionPane.showMessageDialog(null, "用户名错误！");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "密码错误！");
-                    }
+                Test1Demo dataBase = new Test1Demo();
+//                String sql = "SELECT userInfo.`name`,userInfo.pwd FROM userInfo WHERE userInfo.`name`=" + "\"" + usernameText + "\"" +
+//                        "AND" +"userInfo.`name`=" + ;
+                String sql = "SELECT\n" +
+                        "\tuserInfo.`name`, \n" +
+                        "\tuserInfo.pwd\n" +
+                        "FROM\n" +
+                        "\tuserInfo\n" +
+                        "WHERE\n" +
+                        "\tuserInfo.`name` = "+ "'" +usernameText+ "'" + "AND\n" +
+                        "\tuserInfo.pwd = "+"'" +userpassword+ "'";
+                ResultSet resultSet = dataBase.query(sql);
+                if (resultSet == null){
+                    JOptionPane.showMessageDialog(null,"登录失败");
+                }else {
+                    JOptionPane.showMessageDialog(null,"登录成功！");
                 }
+
             }
         });
 
