@@ -1,5 +1,6 @@
 package cn.QYH.jf;
 
+import cn.QYH.main.GameWin;
 import cn.QYH.main.Test1Demo;
 
 import javax.swing.*;
@@ -7,7 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Objects;
 
 public class Login extends JFrame {
@@ -73,16 +73,10 @@ public class Login extends JFrame {
         login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int NameFlag = 0;
-                int PwdFlag = 0;
                 String usernameText = usernameTf.getText();
                 String userpassword = String.valueOf(userpwdF.getPassword());
-//                System.out.println("用户名："+usernameText+"  密码："+userpassword);
-
                 // 这里读取数据库里的数据 和 用户输入做比对
                 Test1Demo dataBase = new Test1Demo();
-//                String sql = "SELECT userInfo.`name`,userInfo.pwd FROM userInfo WHERE userInfo.`name`=" + "\"" + usernameText + "\"" +
-//                        "AND" +"userInfo.`name`=" + ;
                 String sql = "SELECT\n" +
                         "\tuserInfo.`name`, \n" +
                         "\tuserInfo.pwd\n" +
@@ -96,6 +90,8 @@ public class Login extends JFrame {
                     JOptionPane.showMessageDialog(null,"登录失败");
                 }else {
                     JOptionPane.showMessageDialog(null,"登录成功！");
+                    GameWin gameWin = new GameWin();
+                    gameWin.lunch();
                 }
 
             }

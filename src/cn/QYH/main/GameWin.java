@@ -85,7 +85,6 @@ public class GameWin extends JFrame {
 
             }
         });
-
         while(true) {
             repaint();
             try {

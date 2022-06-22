@@ -3,12 +3,26 @@ package cn.QYH.obj;
 import cn.QYH.main.GameWin;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 //英雄机的类
 public class PlaneObj extends GameObj{
     @Override
     public void paintSelf(Graphics g) {
         super.paintSelf(g);
+        //添加鼠标事件，飞机跟随鼠标移动
+        //对鼠标的移动和拖放，另外再加鼠标运动的监听器
+        this.gameWin.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                // 让飞机的横纵坐标 = 鼠标光标的横坐标
+                x = (e.getX() - w/2) + 20;
+
+                y = (e.getY() - h/2) + 10;
+                System.out.println(x +" "+ y);
+            }
+        });
     }
 
     @Override
