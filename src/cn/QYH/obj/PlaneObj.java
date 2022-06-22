@@ -17,10 +17,14 @@ public class PlaneObj extends GameObj{
             @Override
             public void mouseMoved(MouseEvent e) {
                 // 让飞机的横纵坐标 = 鼠标光标的横坐标
-                x = (e.getX() - w/2) ;
-                y = (e.getY() - h/2) ;
+                PlaneObj.super.x = (e.getX() - w/2) ;
+                PlaneObj.super.y = (e.getY() - h/2) ;
             }
         });
+        // 检测我方飞机和敌方飞机的碰撞
+        if (this.gameWin.bossObj != null && this.getRec().intersects(this.gameWin.bossObj.getRec())){
+            GameWin.state = 3;
+        }
     }
 
     @Override

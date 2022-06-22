@@ -47,6 +47,11 @@ public class GameObj {
         this.gameWin = gameWin;
     }
 
+    public GameObj(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     //重绘自身的方法
     public void paintSelf(Graphics g) {
         g.drawImage(image, x, y, null);
