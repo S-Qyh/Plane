@@ -5,6 +5,8 @@ import cn.QYH.util.GameUtils;
 
 import java.awt.*;
 
+import static cn.QYH.obj.PlaneObj.life;
+
 public class EnemyObj extends GameObj{
     @Override
     public void paintSelf(Graphics g) {
@@ -18,12 +20,26 @@ public class EnemyObj extends GameObj{
         }
         // 敌我飞机碰撞检测
         if (this.getRec().intersects(this.gameWin.planeObj.getRec())){
-            GameWin.state = 3;
+            --life;
+            if (life <= 0)
+                GameWin.state = 3;
+
+
+            ExplodeObj explodeObj = new ExplodeObj(x,y);
+            GameUtils.explodeObjList.add(explodeObj);
+
+            GameUtils.removeList.add(explodeObj);
+            this.x = -400;
+            this.y = -400;
+            GameUtils.removeList.add(this);
+            ++GameWin.score;
         }
         // 碰撞检测  敌机消失 移动到（-100，-100）  子弹消失移动到 （-100，-100）
         for (FireObj fireObj:GameUtils.fireList){
             // 当前敌机的obj 和 每一个子弹对象进行碰撞检测
             if (this.getRec().intersects(fireObj.getRec())){
+
+                GameUtils.musicEnemyBoom.play(1);
                 ExplodeObj explodeObj = new ExplodeObj(x,y);
                 GameUtils.explodeObjList.add(explodeObj);
 

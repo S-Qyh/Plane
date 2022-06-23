@@ -1,6 +1,7 @@
 package cn.QYH.jf;
 
 import cn.QYH.main.GameWin;
+import cn.QYH.util.GameUtils;
 import cn.QYH.util.Test1Demo;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Login extends JFrame {
@@ -92,6 +94,11 @@ public class Login extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "登录成功！");
                     userName = usernameText;
+                    try {
+                        GameUtils.search();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     new Thread(new GameWin()).start();
                     that.setVisible(false);
                 }

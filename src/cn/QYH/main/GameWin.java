@@ -7,23 +7,31 @@ import cn.QYH.util.Test1Demo;
 
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.*;
 
 import static cn.QYH.jf.Login.userName;
+import static cn.QYH.obj.PlaneObj.life;
 import static cn.QYH.util.GameUtils.*;
 
+import static java.awt.Color.pink;
 import static java.awt.Color.red;
 
 public class GameWin extends JFrame implements Runnable {
-    // 记录游戏状态  0 游戏未开始  1 游戏中 2 游戏暂停 3 通关成功 4 通关失败
+
+    // 记录游戏状态  0 游戏未开始  1 游戏中 2 游戏暂停  3 通关失败 4 通关
     public static int state = 0;
     // 得分
     public static int score = 0;
@@ -51,6 +59,8 @@ public class GameWin extends JFrame implements Runnable {
     // 敌方boss对象
     public BossObj bossObj = null;
 
+    Test1Demo db = new Test1Demo();
+
     @Override
     public void paint(Graphics g) {
         //初始化图片
@@ -63,43 +73,69 @@ public class GameWin extends JFrame implements Runnable {
         gImage.drawRect(0, 0, w, h);
 
         if (state == 0) {
+//            musicStart.play(1);
             gImage.drawImage(bgimg, 0, 0, null);
             gImage.drawImage(heroimg, 125, 580, 100, 80, null);
             gImage.drawImage(bossimg, 100, 100, null);
-            GameUtils.drawWord(gImage, "点击游戏开始", 40, 120, 480);
+            GameUtils.drawWord(gImage, userName +"欢迎回来！", Color.green, 40, 30, 100);
+            GameUtils.drawWord(gImage, "点击游戏开始", 40, 100, 480);
         }
         if (state == 1) {
+
             gameObjList.addAll(explodeObjList);
             for (GameObj gameObj : gameObjList) {
                 gameObj.paintSelf(gImage);
             }
             gameObjList.removeAll(removeList);
             GameUtils.drawWord(gImage, score + "分数", Color.green, 40, 30, 100);
+            // 显示最高分
+            GameUtils.drawWord(gImage, "您的最高分为："+heightScore, Color.green, 20, 160, 100);
+
         }
         if (state == 3) {
+            musicGameOver.play(1);
             gImage.drawImage(explodeImg, planeObj.getX() - 35, planeObj.getY() - 50, null);
             GameUtils.drawWord(gImage, "失败", red, 50, 150, 480);
-            Test1Demo db = new Test1Demo();
-            String sql = "insert into mark values(\" "+ userName +"\",\""+ score +"\")";
+            String sql = "insert into mark values(\"" + userName + "\",\"" + score + "\")";
             db.insert(sql);
         }
         if (state == 4) {
             gImage.drawImage(explodeImg, bossObj.getX() + 30, bossObj.getY(), null);
             GameUtils.drawWord(gImage, "游戏通关", red, 50, 150, 480);
         }
-        if (state == 2){
-            gImage.drawImage(scoreImg,165 ,380,null);
+        if (state == 2) {
+            gImage.drawImage(scoreImg, 165, 380, null);
         }
         g.drawImage(offScreenImage, 0, 0, null);
         count++;
+
+        if (state == 3){
+            JButton reback = new JButton("重玩");
+            reback.setBounds(150,480,100,80);
+            this.add(reback);
+            reback.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    state = 0;
+                    life = 10;
+                    score = 0;
+                    reback.setVisible(false);
+                }
+            });
+        }
     }
 
     // 批量创建子弹
     public void createdObj() {
-
-        if (count % 20 == 0) {
+        if (count % 100 == 0){
             // 添加子弹到集合
-            fireList.add(new FireObj(bullet, planeObj.getX(), planeObj.getY() - 50, 50, 52, 5, this));
+            fireList.add(new FireObj(doubleFire, planeObj.getX(), planeObj.getY() - 50, 50, 52, 5, this));
+            // 每添加一个炮弹就把该 炮弹 放入 游戏物体的集合
+            gameObjList.add(fireList.get(fireList.size() - 1));
+        }else if (count % 20 == 0) {
+//            musicFire.play(1);
+            // 添加子弹到集合
+            fireList.add(new FireObj(bullet, planeObj.getX()+17, planeObj.getY() - 50, 14, 29, 5, this));
             // 每添加一个炮弹就把该 炮弹 放入 游戏物体的集合
             gameObjList.add(fireList.get(fireList.size() - 1));
         }
@@ -126,6 +162,7 @@ public class GameWin extends JFrame implements Runnable {
         }
 
 
+
         // 测试的时候出现一架就出现boos
         if (enemyCount > 50 && bossObj == null) {
             bossObj = new BossObj(bossimg, 0, 35, 157, 109, 5, this);
@@ -133,6 +170,7 @@ public class GameWin extends JFrame implements Runnable {
         }
 
     }
+
 
     public static void main(String[] args) {
         GameWin gameWin = new GameWin();
@@ -158,7 +196,6 @@ public class GameWin extends JFrame implements Runnable {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-//	    		System.out.println(e.getButton());
                 if (state == 0 && e.getButton() == 1) {
                     //改变游戏状态
                     state = 1;

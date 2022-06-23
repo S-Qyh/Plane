@@ -6,8 +6,8 @@ import static cn.QYH.jf.Login.userName;
 
 //用Java实现MySQL的增删改查操作
 public class Test1Demo {
-    String url = "jdbc:mysql://localhost:3306/qyh?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8";//mysql8的连接字符串，多了时区比之前的5
-    String name = "root";
+    String url = "jdbc:mysql://rm-bp150844nyaa96l67ao.mysql.rds.aliyuncs.com:3306/qyh?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8";//mysql8的连接字符串，多了时区比之前的5
+    String name = "qyh";
     String password = "QYHqyh10215X";
 
     public static void main(String[] args) throws SQLException {

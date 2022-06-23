@@ -37,7 +37,7 @@ public class Sign extends JFrame {
         jPanel.add(userNameLab);
 
         // 密码提示标签
-        JLabel pwdLab = new JLabel("密     码：");
+        JLabel pwdLab = new JLabel("密    码：");
         pwdLab.setBounds(80,120,100,30);
         pwdLab.setFont(font);
         pwdLab.setForeground(Color.BLACK);

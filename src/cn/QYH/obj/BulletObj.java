@@ -5,6 +5,8 @@ import cn.QYH.util.GameUtils;
 
 import java.awt.*;
 
+import static cn.QYH.obj.PlaneObj.life;
+
 public class BulletObj extends GameObj{
     public BulletObj() {
         super();
@@ -24,7 +26,10 @@ public class BulletObj extends GameObj{
         y += speed;
         // 敌方子弹和我方飞机的碰撞检测
         if (this.getRec().intersects(this.gameWin.planeObj.getRec())){
-            GameWin.state = 3;
+            GameUtils.musicHeroBomm.play(1);
+            --life;
+            if (life <= 0)
+                GameWin.state = 3;
         }
 
         // 敌方子弹越界处理
