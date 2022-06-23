@@ -2,6 +2,8 @@ package cn.QYH.main;
 
 import cn.QYH.obj.*;
 import cn.QYH.util.GameUtils;
+import cn.QYH.util.NumberUtil;
+import cn.QYH.util.Test1Demo;
 
 
 import java.awt.*;
@@ -9,14 +11,15 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 
+import static cn.QYH.jf.Login.userName;
 import static cn.QYH.util.GameUtils.*;
-import static java.awt.Color.decode;
+
 import static java.awt.Color.red;
 
 public class GameWin extends JFrame implements Runnable {
@@ -27,6 +30,7 @@ public class GameWin extends JFrame implements Runnable {
     static int w = 384;
     static int h = 960;
     int count = 1;
+
 
     // 敌机数量
     int enemyCount = 0;
@@ -75,10 +79,16 @@ public class GameWin extends JFrame implements Runnable {
         if (state == 3) {
             gImage.drawImage(explodeImg, planeObj.getX() - 35, planeObj.getY() - 50, null);
             GameUtils.drawWord(gImage, "失败", red, 50, 150, 480);
+            Test1Demo db = new Test1Demo();
+            String sql = "insert into mark values(\" "+ userName +"\",\""+ score +"\")";
+            db.insert(sql);
         }
         if (state == 4) {
             gImage.drawImage(explodeImg, bossObj.getX() + 30, bossObj.getY(), null);
             GameUtils.drawWord(gImage, "游戏通关", red, 50, 150, 480);
+        }
+        if (state == 2){
+            gImage.drawImage(scoreImg,165 ,380,null);
         }
         g.drawImage(offScreenImage, 0, 0, null);
         count++;
@@ -86,6 +96,7 @@ public class GameWin extends JFrame implements Runnable {
 
     // 批量创建子弹
     public void createdObj() {
+
         if (count % 20 == 0) {
             // 添加子弹到集合
             fireList.add(new FireObj(bullet, planeObj.getX(), planeObj.getY() - 50, 50, 52, 5, this));
@@ -93,8 +104,17 @@ public class GameWin extends JFrame implements Runnable {
             gameObjList.add(fireList.get(fireList.size() - 1));
         }
         if (count % 20 == 0) {
+            Image enemyImg = new ImageIcon(Objects.requireNonNull(GameUtils.class.getResource("../imgs/ep" + NumberUtil.getNumber(15) + ".png"))).getImage();
+            int width = enemyImg.getWidth(null);
+            int height = enemyImg.getHeight(null);
+
+            EnemyObj enemyObj = new EnemyObj(enemyImg, (int) ((Math.random() * 5) * 70), 0, width, height, 5, this);
+
+            bulletObjList.add(new BulletObj(enemyBullet, enemyObj.getX() + (width / 2) - 5, enemyObj.getY() + height + 3, 15, 25, 10, this));
+            gameObjList.add(bulletObjList.get(bulletObjList.size() - 1));
+
             // 添加飞机到游戏物体集合
-            enemyObjList.add(new EnemyObj(GameUtils.enemyPlane, (int) ((Math.random() * 5) * 70), 0, 71, 48, 5, this));
+            enemyObjList.add(enemyObj);
             gameObjList.add(enemyObjList.get(enemyObjList.size() - 1));
             ++enemyCount;
         }
@@ -105,11 +125,13 @@ public class GameWin extends JFrame implements Runnable {
             gameObjList.add(bulletObjList.get(bulletObjList.size() - 1));
         }
 
+
         // 测试的时候出现一架就出现boos
         if (enemyCount > 50 && bossObj == null) {
             bossObj = new BossObj(bossimg, 0, 35, 157, 109, 5, this);
             gameObjList.add(bossObj);
         }
+
     }
 
     public static void main(String[] args) {
@@ -154,6 +176,7 @@ public class GameWin extends JFrame implements Runnable {
                     switch (state) {
                         case 1:
                             state = 2;
+                            repaint();
                             break;
                         case 2:
                             state = 1;

@@ -22,6 +22,9 @@ public class GameUtils {
     // 敌方子弹
     public static Image enemyBullet = new ImageIcon(Objects.requireNonNull(GameWin.class.getResource("../imgs/bullet.png"))).getImage();
 
+    // 暂停
+    public static Image scoreImg = new ImageIcon(Objects.requireNonNull(GameWin.class.getResource("../imgs/score.png"))).getImage();
+
 
     //存放子弹的集合
     public static ArrayList<FireObj> fireList = new ArrayList<FireObj>();

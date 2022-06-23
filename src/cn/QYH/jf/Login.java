@@ -12,6 +12,7 @@ import java.util.Objects;
 
 public class Login extends JFrame {
     static Login that;
+    public static String userName;
 
     public Login() {
         that = this;
@@ -66,7 +67,7 @@ public class Login extends JFrame {
 
         //存放背景图片
         JLabel bgimg = new JLabel();
-        bgimg.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("../imgs/bg2.jpg"))));
+        bgimg.setIcon(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("../imgs/bg2.jpg"))).getImage().getScaledInstance(400,300,Image.SCALE_DEFAULT)));
         bgimg.setBounds(0, 0, 400, 300);
         jPanel.add(bgimg);
 
@@ -90,9 +91,19 @@ public class Login extends JFrame {
                     JOptionPane.showMessageDialog(null, "登录失败");
                 } else {
                     JOptionPane.showMessageDialog(null, "登录成功！");
+                    userName = usernameText;
                     new Thread(new GameWin()).start();
                     that.setVisible(false);
                 }
+            }
+        });
+
+        sign.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Sign sign1 = new Sign();
+                sign1.signJF();
+                that.setVisible(false);
             }
         });
 

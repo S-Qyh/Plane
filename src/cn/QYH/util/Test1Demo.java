@@ -2,6 +2,8 @@ package cn.QYH.util;
 
 import java.sql.*;
 
+import static cn.QYH.jf.Login.userName;
+
 //用Java实现MySQL的增删改查操作
 public class Test1Demo {
     String url = "jdbc:mysql://localhost:3306/qyh?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8";//mysql8的连接字符串，多了时区比之前的5
@@ -20,6 +22,8 @@ public class Test1Demo {
                 WHERE
                 \tuserInfo.`name` = "user"
                 """).getString(1));
+        String sql = "insert into mark values(\" "+ userName +"\",\""+ 10 +"\")";
+        t1.insert(sql);
     }
 
     public void check() {
@@ -105,6 +109,24 @@ public class Test1Demo {
             e.printStackTrace();
         }
         return null;
+    }
+    public void insert(String sql){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");//在有错误提示的时候光标移到错误处，alt+enter，
+            try {
+                //2.创建连接
+                Connection connection = DriverManager.getConnection(url, name, password);
+                //3.创建命令窗口
+                Statement statement = connection.createStatement();
+                statement.execute(sql);
+                statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
 
